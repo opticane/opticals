@@ -10,16 +10,16 @@ robot = Robot()
 turtleLidar = robot.getDevice('LDS-01')
 
 # get the time step of the current world as well as set up maximum speed for motors
-timestep = 64
-maxspeed = 6.28
+timeStep = 64
+maxSpeed = 6.28
 
 # setting up robot to move 
-leftmotor = robot.getDevice('left wheel motor')
-rightmotor = robot.getDevice('right wheel motor')
-leftmotor.setPosition(float('inf'))
-rightmotor.setPosition(float('inf'))
-leftmotor.setVelocity(0.0)
-rightmotor.setVelocity(0.0)
+leftMotor = robot.getDevice('left wheel motor')
+rightMotor = robot.getDevice('right wheel motor')
+leftMotor.setPosition(float('inf'))
+rightMotor.setPosition(float('inf'))
+leftMotor.setVelocity(0.0)
+rightMotor.setVelocity(0.0)
 
 
 
@@ -34,23 +34,17 @@ lidarWidth = turtleLidar.getHorizontalResolution()
 # Main loop:
 # - perform simulation steps until Webots is stopping the controller
 #   or after a set time elapses 
-while robot.step(timestep) != -1 or robot.step(timestep) > 64:
+while robot.step(timeStep) != -1 or robot.step(timeStep) > 64:
     
     #initialise velocity 
-    leftspeed = 0.5*maxspeed
-    rightspeed = 0.5*maxspeed
+    leftSpeed = 0.5*maxSpeed
+    rightSpeed = 0.5*maxSpeed
     
     
     #  inf if nothing, outputs a float if theres a solid object in way 
     imageData = turtleLidar.getRangeImage()
     print(imageData)
     
-    # removes all values of inf from left/right since no obstacles there      
-    halfTheList = int(round(len(imageData)*0.5))
- 
-    # gets left/right side of the list 
-    obstacleLeft = imageData[0:halfTheList]
-    obstacleRight = imageData[halfTheList:len(imageData)-1]
     
      # removes all values of inf from left/right since no obstacles there
     obstacleLeft = filter(lambda v: v!= float('inf'), obstacleLeft)
@@ -62,10 +56,10 @@ while robot.step(timestep) != -1 or robot.step(timestep) > 64:
     
     #check for no division by 0 errors
     if obstacleLeftVal == 0 :
-        leftspeed = 0.0
+        leftSpeed = 0.0
         
     elif obstacleRightVal == 0 :
-        rightspeed = 0.0 
+        rightSpeed = 0.0 
     
     # takes the left/right speed as a proportion of the inverse of the total depths 
     # of objects in the right/left field of view with corresponds to the right or left
@@ -73,26 +67,25 @@ while robot.step(timestep) != -1 or robot.step(timestep) > 64:
     
     else :
         # caps proportion of the speeds at the maxspeed 
-        if 1/obstacleLeftVal*maxspeed > maxspeed and leftspeed != 0.0 :
-            leftspeed = 0.5*maxspeed 
+        if 1/obstacleLeftVal*maxSpeed > maxSpeed and leftSpeed != 0.0 :
+            leftSpeed = 0.5*maxSpeed 
             
-        elif 1/obstacleRightVal*maxspeed > maxspeed and rightspeed != 0.0 :
-            rightspeed = 0.5*maxspeed 
+        elif 1/obstacleRightVal*maxSpeed > maxSpeed and rightSpeed != 0.0 :
+            rightSpeed = 0.5*maxSpeed 
             
         else :
-            leftspeed = 1/obstacleLeftVal*maxspeed
-            rightspeed = 1/obstacleRightVal*maxspeed
+            leftSpeed = 1/obstacleLeftVal*maxSpeed
+            rightSpeed = 1/obstacleRightVal*maxSpeed
     
     # robot is stuck in front of object if speeds are close to but not 0      
     if obstacleLeftVal+obstacleRightVal < 0.3 and obstacleLeftVal+obstacleRightVal != 0 : 
-        leftspeed = -0.5*maxspeed
-        rightspeed = 0.5*maxspeed 
+        leftSpeed = -0.5*maxSpeed
+        rightSpeed = 0.5*maxSpeed 
         
     # update velocities
-    leftmotor.setVelocity(leftspeed)
-    rightmotor.setVelocity(rightspeed) 
+    leftMotor.setVelocity(leftSpeed)
+    rightMotor.setVelocity(rightSpeed) 
     
-    pass
 
 # disables Lidar 
 turtle_lidar.disable()
