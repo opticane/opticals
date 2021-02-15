@@ -51,7 +51,7 @@ while robot.step(timeStep) != -1 or robot.step(timeStep) > 64:
     imageData = turtleLidar.getRangeImage()
     # shift the list so that index 0 is front of turtlebot
     shiftedImageData = imageData[179:] + imageData[:179]
-    # choose number of partitions and fiel of view
+    # choose number of partitions and field of view
     partitionMinima = lou.findPartitionMinima(shiftedImageData, 10, 270)
     print("Closest distance for each partition: " + str(["%.2f"%x for x in partitionMinima]))
     # choose min and max values for distance to be detected and converted to feedback

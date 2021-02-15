@@ -116,7 +116,7 @@ class Pedestrian (Supervisor):
             # lidar
             # inf if nothing, outputs a float if theres a solid object in way 
             imageData = lidar.getRangeImage()
-            # choose number of partitions and fiel of view
+            # choose number of partitions and field of view
             partitionMinima = lou.findPartitionMinima(imageData, 5, 180)
             print("Closest distance for each partition: " + str(["%.2f"%x for x in partitionMinima]))
             # choose min and max values for distance to be detected and converted to feedback
