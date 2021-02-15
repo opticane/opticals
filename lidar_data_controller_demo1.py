@@ -32,7 +32,7 @@ rightMotor.setVelocity(0.0)
 
 
 # enable lidar and lidar pointcloud
-turtleLidar.enable(timestep)
+turtleLidar.enable(timeStep)
 
 
 
