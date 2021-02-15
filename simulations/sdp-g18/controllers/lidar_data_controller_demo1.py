@@ -29,37 +29,27 @@ rightMotor.setPosition(float('inf'))
 leftMotor.setVelocity(0.0)
 rightMotor.setVelocity(0.0)
 
-
-
 # enable lidar and lidar pointcloud
 turtleLidar.enable(timeStep)
-
-
 
 lidarWidth = turtleLidar.getHorizontalResolution()
 lidarMaxRange = turtleLidar.getMaxRange()
 braitenbergCoeff = [] * lidarWidth
+
 # calculate braitenberg coefficents using a guassian distribution
-for i in range(lidarWidth-1):
-    braitenbergCoeff.append(6 * gaussian(i,lidarWidth/4,lidarWidth/12))
-
-
-
+for i in range(lidarWidth - 1):
+    braitenbergCoeff.append(6 * gaussian(i, lidarWidth / 4, lidarWidth / 12))
 
 # Main loop:
 # - perform simulation steps until Webots is stopping the controller
 #   or after a set time elapses
 while robot.step(timeStep) != -1 or robot.step(timeStep) > 64:
 
-
-
-
     #  inf if nothing, outputs a float if theres a solid object in way
     imageData = turtleLidar.getRangeImage()
 
     print(imageData)
     print('\n')
-
 
     # use coeffs to calculate new left/right speed
     for i in range(int(round(0.25 * lidarWidth)),int(round(0.5 * lidarWidth))):
@@ -68,8 +58,8 @@ while robot.step(timeStep) != -1 or robot.step(timeStep) > 64:
         k = i - 0.25 * lidarWidth
         if imageData[i] == float('inf'):
             imageData[i] = 0
-        leftSpeed = leftSpeed + braitenbergCoeff[i] * ((1.0-imageData[i]/lidarMaxRange) - (1.0-imageData[j]/lidarMaxRange))
-        rightSpeed = rightSpeed + braitenbergCoeff[i] * ((1.0-imageData[i]/lidarMaxRange) - (1.0-imageData[j]/lidarMaxRange))
+        leftSpeed = leftSpeed + braitenbergCoeff[i] * ((1.0 - imageData[i] / lidarMaxRange) - (1.0 - imageData[j] / lidarMaxRange))
+        rightSpeed = rightSpeed + braitenbergCoeff[i] * ((1.0 - imageData[i] / lidarMaxRange) - (1.0 - imageData[j] / lidarMaxRange))
 
         # caps speeds
         if leftSpeed > maxSpeed:

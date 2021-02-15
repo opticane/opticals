@@ -5,79 +5,7 @@
 # please see: https://github.com/cyberbotics/webots/tree/released/projects/robots/robotis/turtlebot
 from controller import Robot, Lidar
 import numpy as np
-
-# finds closest distance for each partition
-# fieldOfView - the horizontal angle range limit
-# partitions are in clockwise order
-def findPartitionMinima(lidarData, partitionCount, fieldOfView):
-    partitionRange = fieldOfView // partitionCount
-    partitionBorders = []
-    # assumes the front dirention is the angle 0
-    currentAngle = - (fieldOfView // 2)
-
-    # find partition border angles
-    for i in range(partitionCount + 1):
-        partitionBorders.append(currentAngle)
-        currentAngle += partitionRange
-    
-    print("Border angles of partitions: " + str(partitionBorders))
-    
-    partitionMinima = []
-    for i in range(partitionCount):
-        
-        partitionStart = partitionBorders[i]
-        partitionEnd = partitionBorders[i + 1]
-        partitionData = 0
-        
-        # slice the original data to get current partition, then find the minimum
-        # handles cases when slicedArray[x:y] x is negative and y positive
-        if partitionStart < 0 and partitionEnd >= -1:
-            if partitionEnd == -1:
-                partitionData = lidarData[partitionStart:]
-            else:
-                partitionData = lidarData[partitionStart:] + lidarData[0 : partitionEnd + 1]
-        else:
-            partitionData = lidarData[partitionStart : partitionEnd + 1]
-        
-        partitionMinima.append(min(partitionData))
-       
-    return partitionMinima
-
-# gives feedback level between 0 and 1 for each partition
-# minDistance - the minumum distance that is considered a valid input to produce feedback
-# maxDistance - the maximum distance that is considered a valid input to produce feedback
-# LDS-01 range on manufacturer website: 0.12m ~ 3.5m
-def getFeedbackLevels(distances, minDistance, maxDistance):
-    feedbackLevels = []
-
-    for distance in distances:
-        if distance != float("inf") and distance <= maxDistance and distance >= minDistance:
-            feedbackLevels.append(1 - ((distance - minDistance) / (maxDistance - minDistance)))
-        else:
-            # out of range
-            feedbackLevels.append(0)
-
-    return feedbackLevels 
-
-# prints a table with collumns corresponding to the partitions in clockwise order with their feedback level
-# levelCount - number of different feedback levels
-# feedbackLevels - the feedback levels for each partition
-def showFeedbackLevels(feedbackLevels, levelCount):
-    
-    for feedbackLevel in feedbackLevels:
-        print("----", end ="")
-    print("-")
-    for levelIndex in range(levelCount, 0, -1):
-        print("|", end ="")
-        for feedbackLevel in feedbackLevels:
-            if feedbackLevel > (levelIndex - 1) / levelCount:
-                print(" X ", end ="|")
-            else:
-                print("   ", end ="|")
-        print()
-    for feedbackLevel in feedbackLevels:
-        print("----", end ="")
-    print("-")
+import lidarOutputUtils as lou
 
 # gaussian function needed for braitenburg coefficents
 def gaussian(x, mu, sigma):
@@ -124,14 +52,14 @@ while robot.step(timeStep) != -1 or robot.step(timeStep) > 64:
     # shift the list so that index 0 is front of turtlebot
     shiftedImageData = imageData[179:] + imageData[:179]
     # choose number of partitions and fiel of view
-    partitionMinima = findPartitionMinima(shiftedImageData, 10, 270)
+    partitionMinima = lou.findPartitionMinima(shiftedImageData, 10, 270)
     print("Closest distance for each partition: " + str(["%.2f"%x for x in partitionMinima]))
     # choose min and max values for distance to be detected and converted to feedback
     # LDS-01 range on manufacturer website: 0.12m ~ 3.5m
-    feedbackLevels = getFeedbackLevels(partitionMinima, 0.12, 1)
+    feedbackLevels = lou.getFeedbackLevels(partitionMinima, 0.12, 1)
     print("Feedback levels for each partition: " + str(["%.2f"%x for x in feedbackLevels]))
     # print table
-    showFeedbackLevels(feedbackLevels, 5)
+    lou.printFeedbackLevels(feedbackLevels, 5)
 
 
     # use coeffs to calculate new left/right speed
