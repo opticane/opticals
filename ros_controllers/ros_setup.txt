@@ -1,0 +1,12 @@
+ROS Controller setup for LiDARs 
+
+1.  chmod +x lidar_scan.py  
+2.  chmod +x dummy_lidar_data.py  
+3.  source ~/catkin_ws/devel/setup.bash
+4.  roscore
+(4.5) roslaunch turtlebot3_bringup turtlebot3_robot.launch  **If not using dummy data**
+5.  **in new terminal** rosrun <my_package_name> lidar_scan.py
+6.  **in another new terminal** rosrun  <my_package_name> lidar_dummy_data.py
+
+NB: Unsure if ROS Main Node is needed to run under roslaunch before rosrun-ing the two scripts
+   If so consult this page, http://wiki.ros.org/roslaunch, to create a main node first 
