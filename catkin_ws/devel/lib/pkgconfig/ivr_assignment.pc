@@ -1,8 +1,0 @@
-prefix=/media/sf_cw/catkin_ws/devel
-
-Name: ivr_assignment
-Description: Description of ivr_assignment
-Version: 0.0.0
-Cflags: -I/media/sf_cw/catkin_ws/devel/include
-Libs: -L${prefix}/lib 
-Requires: message_runtime std_msgs
