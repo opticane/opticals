@@ -1,0 +1,7 @@
+set(ivr_assignment_SETUP_PY_SETUP_MODULE "setuptools")
+set(ivr_assignment_SETUP_PY_VERSION "0.0.0")
+set(ivr_assignment_SETUP_PY_SCRIPTS "")
+set(ivr_assignment_SETUP_PY_PACKAGES "ivr_assignment")
+set(ivr_assignment_SETUP_PY_PACKAGE_DIRS "src/ivr_assignment")
+set(ivr_assignment_SETUP_PY_MODULES "")
+set(ivr_assignment_SETUP_PY_MODULE_DIRS "")
