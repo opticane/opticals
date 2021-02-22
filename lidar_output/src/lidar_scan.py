@@ -9,22 +9,17 @@ def laser_scan_callback(data):
 
     imageData = data.ranges
     #index 0 is the behind whereas front is 179 so needs to shift 179 to be index 0
-    #print(imageData)
     shiftedImageData = imageData[179:] + imageData[:179]
-    #print(len(shiftedImageData))
-    #print(shiftedImageData)
     pMin = findPartitionMinima(shiftedImageData, 5, 180)
     minD = 0.5
     maxD = 3
     fbLevels = getFeedbackLevels(pMin, minD, maxD)
-    print(fbLevels)
     levelCount = 6
     printFeedbackLevels(fbLevels, levelCount)
 
 def dummy_data_callback(data):
 
     imageData = data.data
-    print(imageData)
     #index 0 is the behind whereas front is 179 so needs to shift 179 to be index 0
     shiftedImageData = imageData[179:] + imageData[:179]
 
@@ -32,11 +27,11 @@ def dummy_data_callback(data):
 
 
     #print 5 feedback levels for the 5 motors on the cane
-    feedbackLevels  = get_feedback_levels(partitionMinima, 0.12, 1)
+    fbLevels  = get_feedback_levels(partitionMinima, 0.12, 1)
 
     #LDS-01 of 0,12-1m
-    #print_feedback_levels(feedbackLevels, 5)
-
+    levelCount = 6
+    printFeedbackLevels(fbLevels, levelCount)
 
 def read_laser_scan_data():
 
@@ -124,8 +119,10 @@ def getFeedbackLevels(distances, minDistance, maxDistance):
 
 
 if __name__ == '__main__':
-    rospy.init_node('example_script',anonymous=True)
+    rospy.init_node('lidar_scan',anonymous=True)
 
+    #robot currently doesn't move, but code is kept in case we need to test
+    #on the move lidar values
     startTime = time()
     duration = 5 #in seconds
     forwardSpeed = 1
@@ -140,11 +137,12 @@ if __name__ == '__main__':
             ###comment out when not using dummy data
             #sends connection msg to dummy_lidar_data to tell it to start sending data
             #connect_msg.publish(np.float64(1))
-
             ###
+
             read_laser_scan_data()
             #move_motor(forwardSpeed,turnSpeed)
         except rospy.ROSInterruptException:
             pass
         else:
+            #kept for testing possible moving lidar 
             move_motor(0,0)
