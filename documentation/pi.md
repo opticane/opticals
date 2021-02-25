@@ -28,7 +28,7 @@ on port 0x04 and is already configured in the `motors` library. LED bulbs are co
 Follow this guide to make motors move:http://www.inf.ed.ac.uk/teaching/courses/sdp/SDP2020/sdp_rpi_guide.pdf
 
 ### The new haptic driver board
-Adafruit DRV2605L Haptic Controller Breakout on the other active port
+Adafruit DRV2605L Haptic Controller Breakout on the other active port (relevant libraries are already installed by Garry)
 
 <img src="./images/drv2605.jpg" width="40%">
 
