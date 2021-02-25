@@ -12,7 +12,11 @@ ssh -XC pi@abomasnow
 ## Current Connections
 check what's on the 12c bus by `i2cdetect -y 1`
 ### Camera
-To access the camera: use `vlc` on pi. 
+To access the camera: First complete the 2-step ssh in your terminal. You should see the prompt below:
+```bash
+~pi@abomasnow $
+```
+run `vlc` command. You should see the graphical window pops up on your local computer.
 
 Media - open_capture_device
 
