@@ -20,7 +20,7 @@ run `vlc` command. You should see the graphical window pops up on your local com
 
 Media - open_capture_device
 
-Video device name = video1
+Video device name = video0
 
 Video standard = All
 
