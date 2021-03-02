@@ -4,7 +4,6 @@ from geometry_msgs.msg import Twist
 from sensor_msgs.msg import LaserScan
 from time import time
 import numpy as np
-from motors import Motors
 import lidarOutputUtils as lOU
 from hapticFeedbackUtils import Handle
 

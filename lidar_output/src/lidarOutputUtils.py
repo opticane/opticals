@@ -11,16 +11,16 @@ def findPartitionMinima(lidarData, partitionCount, fieldOfView):
     for i in range(partitionCount + 1):
         partitionBorders.append(currentAngle)
         currentAngle += partitionRange
-    
+
     print("Border angles of partitions: " + str(partitionBorders))
-    
+
     partitionMinima = []
     for i in range(partitionCount):
-        
+
         partitionStart = partitionBorders[i]
         partitionEnd = partitionBorders[i + 1]
         partitionData = [0]
-        
+
         # slice the original data to get current partition, then find the minimum.
         # handles cases when slicedArray[x:y] x is negative and y positive
         if partitionStart < 0 and partitionEnd >= -1:
@@ -30,9 +30,9 @@ def findPartitionMinima(lidarData, partitionCount, fieldOfView):
                 partitionData = lidarData[partitionStart:] + lidarData[0 : partitionEnd + 1]
         else:
             partitionData = lidarData[partitionStart : partitionEnd + 1]
-        
+
         partitionMinima.append(min(partitionData))
-       
+
     return partitionMinima
 
 # gives feedback level between 0 and 1 for each partition
@@ -49,24 +49,26 @@ def getFeedbackLevels(distances, minDistance, maxDistance):
             # out of range
             feedbackLevels.append(0)
 
-    return feedbackLevels 
+    return feedbackLevels
 
 # prints a table with columns corresponding to the partitions in clockwise order with their feedback level
 # levelCount - number of different feedback levels
 # feedbackLevels - the feedback levels for each partition
-def printFeedbackLevels(feedbackLevels, levelCount):
-    
-    for feedbackLevel in feedbackLevels:
-        print("----", end ="")
-    print("-")
+def printFeedbackLevels(self,feedbackLevels, levelCount):
+
+    print("----"),
+    for fbLevel in range(len(feedbackLevels) - 2):
+        print("---"),
+    print("----")
     for levelIndex in range(levelCount, 0, -1):
-        print("|", end ="")
+        print("|"),
         for feedbackLevel in feedbackLevels:
-            if feedbackLevel > (levelIndex - 1) / levelCount:
-                print(" X ", end ="|")
+            if feedbackLevel > (levelIndex - 1.0) / levelCount:
+                print("X |"),
             else:
-                print("   ", end ="|")
-        print()
-    for feedbackLevel in feedbackLevels:
-        print("----", end ="")
-    print("-")
+                print("  |"),
+        print("")
+    print("----"),
+    for fbLevel in range(len(feedbackLevels) - 2):
+        print("---"),
+    print("----")
