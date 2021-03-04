@@ -154,9 +154,7 @@ class Pedestrian (Supervisor):
             for i in [7,8]:
                 relativeCaneAngle += self.joints_position_field[i].getSFFloat()
             relativeCaneAngle = math.degrees(relativeCaneAngle)
-            #print(relativeCaneAngle)
             relativeFrontPartitionIndex = [idx for idx, border in enumerate(partitionBorders) if border > relativeCaneAngle][0] - 1
-            #print(relativeFrontPartitionIndex)
 
             # following stops on any feedback in any of the patitions
             #if any(map(lambda x: x > 0, feedbackLevels)):
