@@ -1,0 +1,83 @@
+#VRML_SIM R2021a utf8
+WorldInfo {
+  info [
+    "Pedestrian Simulation"
+  ]
+  title "Autonomous Vehicle"
+  ERP 0.6
+  basicTimeStep 10
+  coordinateSystem "NUE"
+  lineScale 1
+  contactProperties [
+    ContactProperties {
+      softCFM 0.0003
+    }
+  ]
+}
+Viewpoint {
+  orientation -0.9882633403456333 -0.1186657343027943 0.09619778392078215 0.6074101119219529
+  position 1.684013951571205 18.916551336493917 26.975966692004942
+  near 1
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+Pedestrian {
+  translation -0.58338 1.26 1.34913
+  rotation 0 1 0 0.261801
+  name "pedestrian(1)"
+  shirtColor 1 1 0
+}
+Pedestrian {
+  translation -0.290827 1.26 2.31957
+  rotation 0 1 0 -2.8797953071795863
+  name "pedestrian(2)"
+  shirtColor 1 1 0
+}
+BlindMan {
+  translation 0 1.26 8
+  rotation 0 1 0 3.14159
+  controllerArgs [
+    "--caneMovement=0"
+    "--trajectory=0 8, 0 -8"
+  ]
+  shirtColor 0 0.666667 0
+  rightHandSlot [
+    Solid {
+      translation 0.03 -0.407587 0.416899
+      rotation 1 0 0 -0.785395307179586
+      children [
+        RobotisLds01 {
+          translation 0 0.19677584802891301 0.007070478029781002
+          rotation -1 0 2.992358938513885e-23 -0.9162996938995749
+        }
+        Shape {
+          appearance PBRAppearance {
+            metalness 0
+          }
+          geometry DEF cane Cylinder {
+            height 1.4
+            radius 0.01
+          }
+        }
+      ]
+    }
+  ]
+}
+Floor {
+  size 30 30
+  appearance Parquetry {
+    type "dark strip"
+    colorOverride 0.356863 0.356863 0.356863
+  }
+}
+PhoneBooth {
+  translation 2.09501 -3.19744e-14 2.97326
+}
+FireHydrant {
+  translation 1.76039 -1.42109e-14 4.88981
+}
+TrashBin {
+  translation -2.96352 -8.88178e-15 4.71516
+}
