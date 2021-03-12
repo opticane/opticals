@@ -1,12 +1,15 @@
 #!/usr/bin/env python
+## servoMotorUtils handles the hardware functions to move the servoMotor with mounted LiDAR  ##
 from Phidget22.Phidget import *
 from Phidget22.Devices.RCServo import *
+from time import time
+from time import sleep
 
 class servoMotorUtils:
     def __init__(self):
         #set up servo motor
         self.ch = RCServo()
-        self.ch.openWaitForAttachment(1000)
+        self.ch.openWaitForAttachment(5000)
 
         #gives diff pulse width values for testing
         self.smallMinPW = 1000
@@ -16,20 +19,24 @@ class servoMotorUtils:
 
 
     def testRotation(self):
-        try:
-
+        startTime = time()
+        duration = 300
+        self.ch.openWaitForAttachment(5000)
+        while True and time()<startTime+duration:
             self.ch.setTargetPosition(0.0)
+            self.ch.setEngaged(True)
             self.ch.setTargetPosition(180.0)
+            self.ch.setEngaged(True)
             print("** Success: correctly moved motor **")
             self.ch.setTargetPosition(0.0)
             print("** Reset motor position **")
-        except Phidget22.PhidgetException:
-            print("** Error: motor has not moved **")
 
         if self.ch.setTargetPosition == 0.0:
             print("** Sucess: motor in correct position **")
         else:
             print("** Error: motor not in correct position")
+        self.ch.close()
+
 
 
     def setMinMaxPos(self,minPos,maxPos):
@@ -50,25 +57,18 @@ class servoMotorUtils:
         self.ch.setMinPosition(minPos)
 
     def moveOneDegreeFrom0(self,currentPosition):
-
         #check currentPosition is actually the current position
-        if currentPosition != self.ch.getPosition():
-            raise Exception("** Error: Position specified is incorrect **")
-        try:
-            self.ch.setTargetPosition((currentPosition + 1.0))
-        except Phidget22.PhidgetException:
-            print("** Error: Could not move motor **")
+        self.ch.openWaitForAttachment(5000)
+        self.ch.setTargetPosition((currentPosition + 1.0))
+        self.ch.setEngaged(True)
+        sleep(0.01)
 
     def moveOneDegreeTo0(self,currentPosition):
-
         #check currentPosition is actually the current position
-        if currentPosition != self.ch.getPosition():
-            raise Exception("** Error: Position specified is incorrect **")
-        try:
-            #subtract from one degree
-            self.ch.setTargetPosition((currentPosition - 1.0))
-        except Phidget22.PhidgetException:
-            print("** Error: Could not move motor **")
+        self.ch.openWaitForAttachment(5000)
+        self.ch.setTargetPosition((currentPosition - 1.0))
+        self.ch.setEngaged(True)
+        sleep(0.01)
 
     def closeServoMotor(self):
         self.ch.close()
@@ -78,3 +78,4 @@ class servoMotorUtils:
 if __name__ == "__main__":
 
     sM = servoMotorUtils()
+    #sM.testRotation()
