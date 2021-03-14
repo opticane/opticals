@@ -58,7 +58,8 @@ class lidarHardwareUtils:
         lidarDist = (distL + 256*distH)
         #close bus once all data received
         bus.close()
-        return lidarDist
+        #convert to m
+        return float(lidarDist)/100
 
 
 

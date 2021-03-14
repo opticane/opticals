@@ -59,13 +59,17 @@ class servoMotorUtils:
     def moveOneDegreeFrom0(self,currentPosition):
         #check currentPosition is actually the current position
         self.ch.openWaitForAttachment(5000)
-        self.ch.setTargetPosition((currentPosition + 1.0))
+        sleep(0.01)
+
+        toMove = (currentPosition + 1.0) % 181
+        sleep(0.01)
+        self.ch.setTargetPosition(toMove)
         self.ch.setEngaged(True)
         sleep(0.01)
 
     def moveOneDegreeTo0(self,currentPosition):
-        #check currentPosition is actually the current position
         self.ch.openWaitForAttachment(5000)
+        sleep(0.01)
         self.ch.setTargetPosition((currentPosition - 1.0))
         self.ch.setEngaged(True)
         sleep(0.01)

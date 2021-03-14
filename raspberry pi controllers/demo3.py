@@ -3,10 +3,11 @@ from time import time
 from time import sleep
 import numpy as np
 import servoMotorUtils as sM
-import lidarIO as lIO
+import lidarHardwareUtils as lHU
 import lidarDataUtils as lDU
+import feedbackMotorUtils as fMU
 
-class demo3:
+class Demo3:
     def __init__(self):
 
         #for testing how long do we keep the script running, in secs
@@ -14,33 +15,39 @@ class demo3:
         startTime = time()
 
         #set up LiDAR utils
-        lHardware = lidarHardwareUtils()
-        self.lidarDataBuffer = [0.0]*180
+        lHardware = lHU.lidarHardwareUtils()
+        lidarDist = [0.0]*180
 
 
         while time()<startTime+duration:
-            try:
-                #move the servo motor, get the readings
-                lHardware.get_lidar_data_buffer()
+            #move the servo motor, get the readings
+            lHardware.get_lidar_data_buffer()
 
-                #pad data to 360 to work with older functions which used 360 degree data input
-                lidarDist = lHardware.distances
-                lidarDataPadded = lidarDist
-                lidarDataPadded.append(lidarDist.reverse())
+            #pad data to 360 to work with older functions which used 360 degree data input
+            lidarDist = lHardware.distances
+            lidarDataPadded = lidarDist
+            lidarDataPadded.append(lidarDist.reverse())
 
-                #get the lidar data into paritions
-                pMin = lData.findPartitionMinima(lidarDataPadded, 5, 180)
-                minD = 0.5
-                maxD = 3
+            #get the lidar data into paritions
+            pMin = lDU.findPartitionMinima(lidarDataPadded, 5, 180)
+            print("PMin:",pMin)
+            minD = 0.5
+            maxD = 4
 
-                #get the feedback levels
-                fbLevels = lData.getFeedbackLevels(pMin, minD, maxD)
-                levelCount = 6
+            #get the feedback levels and vibration levels
+            fbLevels = lDU.getFeedbackLevels(pMin, minD, maxD)
+            vLevels = lDU.mapFeedbackLevelsToVib(fbLevels)
+            #remove last element until it works 
+            vLevels = vLevels[0:4]
+            levelCount = 6
+            print(fbLevels)
+            lDU.printFeedbackLevels(fbLevels,levelCount)
 
-                lDU.printFeedbackLevels(fbLevels, levelCount)
+            #ouput the vibration levels to the motors
+            fMU.multi_vib(vLevels)
 
 
-            except:
-                raise Exception("** Error: something went wrong with the LiDAR **")
-            else:
-                pass
+
+if __name__ == '__main__':
+
+    demo3 = Demo3()

@@ -1,6 +1,5 @@
-## Lidar Data Utils handles the processing of LiDAR data in haptic feedback information ## 
-
-
+## Lidar Data Utils handles the processing of LiDAR data in haptic feedback information ##
+import numpy as np
 # finds closest distance for each partition.
 # fieldOfView - the horizontal angle range limit
 # partitions are in clockwise order
@@ -24,7 +23,7 @@ def findPartitionMinima(lidarData, partitionCount, fieldOfView):
         partitionEnd = partitionBorders[i + 1]
         partitionData = [0]
 
-        # slice the original data to get current partition, then find the minimum.
+        # slice the original data to get current partition, then find the  weighted minimum of 3 smallest.
         # handles cases when slicedArray[x:y] x is negative and y positive
         if partitionStart < 0 and partitionEnd >= -1:
             if partitionEnd == -1:
@@ -33,10 +32,37 @@ def findPartitionMinima(lidarData, partitionCount, fieldOfView):
                 partitionData = lidarData[partitionStart:] + lidarData[0 : partitionEnd + 1]
         else:
             partitionData = lidarData[partitionStart : partitionEnd + 1]
-
-        partitionMinima.append(min(partitionData))
+        #get weightedAverage
+        wAv = weightedAverage(partitonData)
+        partitionMinima.append(wAv)
 
     return partitionMinima
+
+#gets weighted average of 3 smallest readings for each partition
+def weightedAverage(partitionData):
+    #get 3 smallest nonzero distances
+    pData = partitionData
+    paData = [i for i in pData if i != 0]
+    #sort and take first 3 elements
+    partitionData.sort()
+    minima = partitionData[:3]
+    print(minima)
+    #get the weightings, ensuring to remove any weightings of distance less than 0.2m
+    weightings = [i/sum(minima)*100 if i >= 0.2 else 100 for i in minima]
+    #inverse making smallest weighting for smallest distance the largest
+    weightings = [(100 - i)/100 for i in weightings]
+    print(weightings)
+
+    #calculate and return partition average
+    partitionAv = sum([i*j for i,j in zip(minima,weightings)])/sum(weightings)
+    return partitionAv
+
+
+
+
+
+
+
 
 # gives feedback level between 0 and 1 for each partition
 # minDistance - the minumum distance that is considered a valid input to produce feedback
@@ -54,10 +80,25 @@ def getFeedbackLevels(distances, minDistance, maxDistance):
 
     return feedbackLevels
 
+# map the feedback levels used to generate the terminal output feedback table with
+# the different levels the vibration motors can take 
+def mapFeedbackLevelsToVib(fbLevels):
+    vibrationLevels = []
+    for f in fbLevels:
+        if f <= 0.2:
+            vibrationLevels.append(20)
+        elif f <= 0.6:
+            vibrationLevels.append(60)
+        else:
+            vibrationLevels.append(100)
+    return vibrationLevels
+
+
+
 # prints a table with columns corresponding to the partitions in clockwise order with their feedback level
 # levelCount - number of different feedback levels
 # feedbackLevels - the feedback levels for each partition
-def printFeedbackLevels(self,feedbackLevels, levelCount):
+def printFeedbackLevels(feedbackLevels, levelCount):
 
     print("----"),
     for fbLevel in range(len(feedbackLevels) - 2):
