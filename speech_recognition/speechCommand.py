@@ -8,7 +8,7 @@ def listen(phrases):
     with sr.Microphone() as source:
         r.adjust_for_ambient_noise(source)
         print("Recording input!")
-        audio = r.listen(source)
+        audio = r.listen(source, timeout=1, phrase_time_limit=2)
 
     # recognize speech using Sphinx
     try:
@@ -24,34 +24,45 @@ def listen(phrases):
         print("Sphinx error; {0}".format(e))
         return ""
 
-def executeCommand(phrase, dictionary):
+def executeCommand(phrase, locations, faces):
 
     if phrase.startswith("where is"):
         locationName = (phrase[len("where is "):]).strip()
-        if locationName in dictionary.keys():
-            print("\"" + locationName + "\" is at: " + str(dictionary[locationName]))
+        if locationName in locations.keys():
+            print("\"" + locationName + "\" is at: " + str(locations[locationName]))
         else:
             print("Not in dictionary")
 
     elif phrase.startswith("save location"):
         locationName = (phrase[len("save "):]).strip()
-        dictionary[locationName] = mockGPSgetCoordinates()
+        locations[locationName] = mockGPSgetCoordinates()
         print("Location of \"" + locationName + "\" saved at " + str(mockGPSgetCoordinates()))
+
+    elif phrase.startswith("remember face"):
+        faces.append(mockGPSgetCoordinates())
+        print("Face saved")
         
     else:
-        print("unrecognized command")
+        print("Unrecognized command")
 
 
 def mockGPSgetCoordinates():
     return (0, 1)
+
+def mockCameraTakePicture():
+    return "imaginary picture"
 
 
 # main
 locationNames = ["one", "two", "three"]
 locationCommands = ["where is location", "save location"]
 locationPhrases = [(command + " " + name, 1.0) for command in locationCommands for name in locationNames]
+faceCommands = ["remember face"]
+facePhrases = [(command, 1.0) for command in faceCommands]
 
 locationsGPS = {}
 locationsGPS["location one"] = (0, 2)
 
-executeCommand(listen(locationPhrases), locationsGPS)
+familiarFaces = []
+
+executeCommand(listen(locationPhrases + facePhrases), locationsGPS, familiarFaces)
