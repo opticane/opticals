@@ -41,10 +41,16 @@ def executeCommand(phrase, locations, faces):
     elif phrase.startswith("remember face"):
         faces.append(mockGPSgetCoordinates())
         print("Face saved")
+
+    elif phrase.startswith("check the battery"):
+        batteryLevel = mockBatteryGetLevel()
+        print("The battery has " + str(batteryLevel) + "%" + " left")
         
     else:
         print("Unrecognized command")
 
+def mockBatteryGetLevel():
+    return 75
 
 def mockGPSgetCoordinates():
     return (0, 1)
@@ -59,10 +65,11 @@ locationCommands = ["where is location", "save location"]
 locationPhrases = [(command + " " + name, 1.0) for command in locationCommands for name in locationNames]
 faceCommands = ["remember face"]
 facePhrases = [(command, 1.0) for command in faceCommands]
+batteryPhrases = [("check the battery", 1.0)]
 
 locationsGPS = {}
 locationsGPS["location one"] = (0, 2)
 
 familiarFaces = []
 
-executeCommand(listen(locationPhrases + facePhrases), locationsGPS, familiarFaces)
+executeCommand(listen(locationPhrases + facePhrases + batteryPhrases), locationsGPS, familiarFaces)
