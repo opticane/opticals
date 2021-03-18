@@ -1,4 +1,4 @@
-def battery_to_haptic(battery):
+def battery_to_haptic(battery, intensity=1.0):
     '''
     Translate a battery level from [0-100] to
     haptic feedback. The haptic feedback is a
@@ -12,7 +12,6 @@ def battery_to_haptic(battery):
     '''
 
     feedback = [0, 0, 0, 0, 0]
-    intensity = 0.6
     thresholds = [10, 30, 50, 70, 90]
 
     for i in len(thresholds):

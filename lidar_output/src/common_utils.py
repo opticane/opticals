@@ -8,6 +8,7 @@ def calc_vertex_angle(a, b, c):
 
     Calculates angle from p1 -> p3 counter-clockwise.
     '''
+
     angle = math.atan2(c[1] - b[1], c[0] - b[0]) - math.atan2(a[1] - b[1], a[0] - b[0])
 
     return math.degrees(angle) % 360
@@ -18,6 +19,7 @@ def rotate_point(point, origin, angle):
     Rotate a point about an origin by an input angle in 
     degrees counter-clockwise.
     '''
+    
     rad_angle = math.radians(angle)
     ox, oy = origin
     px, py = point
