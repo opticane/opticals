@@ -1,9 +1,8 @@
-#!/usr/bin/env python
-## servoMotorUtils handles the hardware functions to move the servoMotor with mounted LiDAR  ##
-from Phidget22.Phidget import *
-from Phidget22.Devices.RCServo import *
 from time import time
 from time import sleep
+from Phidget22.Phidget import *
+from Phidget22.Devices.RCServo import *
+## servoMotorUtils handles the hardware functions to move the servoMotor with mounted LiDAR  ##
 
 class servoMotorUtils:
     def __init__(self):

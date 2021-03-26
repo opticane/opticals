@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import board
 import busio
 import adafruit_tca9548a
@@ -14,6 +15,7 @@ def multi_vib(levels):
     """
     for level,drv in zip(levels,drvs):
         vibrate(level,drv)
+        print("vibrate at:",level)
 
 
 def vibrate(level,drv):
