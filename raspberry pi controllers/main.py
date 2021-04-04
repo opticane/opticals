@@ -5,7 +5,7 @@ import lidarHardwareUtils as lHU
 import lidarDataUtils as lDU
 import feedbackMotorsUtils as fMU
 
-class Demo3:
+class MainFun:
     def __init__(self):
 
         #set up LiDAR utils
@@ -43,4 +43,4 @@ class Demo3:
 
 if __name__ == '__main__':
 
-    demo3 = Demo3()
+    mainF = MainFun()
