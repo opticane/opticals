@@ -5,14 +5,14 @@ import lidarHardwareUtils as lHU
 import lidarDataUtils as lDU
 import feedbackMotorsUtils as fMU
 
-class Demo3:
+class MainFun:
     def __init__(self):
 
         #set up LiDAR utils
         lHardware = lHU.lidarHardwareUtils()
         lidarDist = [0.0]*180
 
-        #loop infinitely 
+        #loop infinitely
         while True:
             #move the servo motor, get the readings
             lHardware.get_lidar_data_buffer()
@@ -31,7 +31,7 @@ class Demo3:
             fbLevels = lDU.getFeedbackLevels(pMin, minD, maxD)
             vLevels = lDU.mapFeedbackLevelsToVib(fbLevels)
             #remove last element until it works
-            vLevels = vLevels[0:4]
+            vLevels = vLevels[0:5]
             levelCount = 6
             print(fbLevels)
             lDU.printFeedbackLevels(fbLevels,levelCount)
@@ -43,4 +43,4 @@ class Demo3:
 
 if __name__ == '__main__':
 
-    demo3 = Demo3()
+    mainF = MainFun()
